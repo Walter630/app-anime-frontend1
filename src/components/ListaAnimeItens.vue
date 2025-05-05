@@ -3,13 +3,13 @@
   <v-window v-model="onboarding" show-arrows="hover" style="margin-top: 40px;">
     <v-window-item v-for="(image, n) in imageList" :key="`card-${n}`" >
       <v-card
-        class="d-flex align-center justify-center "
+        class="d-flex  align-center justify-center"
         elevation="4"
         height="450"
         color="black" dark
       >
 
-         <v-img class="img align-end" :src="image" cover>{{ todos[n]?.title }}</v-img>
+         <v-img class=" img align-end " :src="image" cover>{{ todos[n]?.title }}</v-img>
       </v-card>
     </v-window-item>
   </v-window>
@@ -197,17 +197,31 @@ export default {
 /* Aplicando transição suave na troca de imagem de fundo */
 .images {
   transition: transform 0.3s ease-in-out;
-  
 }
 .images:hover {
   transform: scale(1.08); /* aumenta 5% */
   cursor: pointer;
 }
-.img{
+.img {
+  width: 100%;
+  max-width: 2000px; /* limita o tamanho em telas maiores */
+  height: auto; /* mantém proporção da imagem */
   transition: transform 0.3s ease-in-out;
-  box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.3); /* sombra clara */
-  border-radius: 8px; /* opcional, para suavizar as bordas */
+  box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto; /* centraliza em telas menores */
 }
+
+/* Responsividade extra para celulares */
+@media (max-width: 600px) {
+  .img {
+    max-width: 100%;
+    height: 180px;
+    box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.2);
+  }
+}
+
 .img:hover{
   transform: scale(1.08); /* aumenta 5% */
   cursor: pointer;

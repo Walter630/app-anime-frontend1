@@ -21,7 +21,7 @@
    <v-app-bar :elevation="scrolling ? 0 : 2" color="black" dark :style="{ backgroundColor: scrolling ? 'transparent' : 'black' }">
     <v-row class="d-flex align-center w-100" no-gutters>
       <v-col cols="auto" class="d-flex align-center">
-        <v-app-bar-nav-icon class="d-none d-md-flex" @click="isDrawOpen = !isDrawOpen"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon class="" @click="isDrawOpen = !isDrawOpen"></v-app-bar-nav-icon>
         <v-card-title>
           <img src="/logo.png" height="50" style="margin-top: 5px;" />
         </v-card-title>
