@@ -6,7 +6,7 @@
           <v-icon>mdi-arrow-left-bold-outline</v-icon>
         </v-btn>
         <v-card-title>
-          <img src="/logo.png" height="50" style="margin-top: 5px;" />
+          <img src="/LogoYokuso.png" alt="Logo" height="50" style="margin-top: 5px" />
         </v-card-title>
       </v-col>
       <v-col cols="auto" class="d-flex justify-end">
@@ -19,19 +19,14 @@
     icon="mdi-magnify"
     text="Página ainda em construção, aguarde"
     title="We couldn't find a match."
-    style="margin-top: 200px;"
+    style="margin-top: 200px"
     v-if="episodiosList.length === 0"
   ></v-empty-state>
 
   <v-main v-else>
     <v-row class="d-flex align-center row" no-gutters>
       <v-col cols="12" md="4" color="black" dark>
-        <v-img
-          :src="`${anime.image}`"
-          height="350"
-          class="image-overlay"
-          cover
-        >
+        <v-img :src="`${anime.image}`" height="350" class="image-overlay" cover>
           <template #default>
             <div class="overlay"></div>
           </template>
@@ -57,12 +52,7 @@
     <v-divider class="my-1"></v-divider>
 
     <v-row dense class="d-flex flex-column">
-      <v-col
-        v-for="(ep, index) in episodiosList"
-        :key="index"
-        cols="12"
-        class="mb-3"
-      >
+      <v-col v-for="(ep, index) in episodiosList" :key="index" cols="12" class="mb-3">
         <v-card class="pa-2 black-card" elevation="6">
           <v-row>
             <v-col cols="12" md="4">
@@ -72,7 +62,7 @@
                 muted
                 playsinline
                 height="120"
-                style="width: 100%; border-radius: 8px;"
+                style="width: 100%; border-radius: 8px"
                 @click="expandirVideo($event)"
               >
                 Seu navegador não suporta vídeos HTML5.
@@ -82,7 +72,9 @@
             <v-col cols="12" md="8">
               <div class="text-white font-weight-bold mb-1">
                 Capítulo {{ ep.episodios }}: {{ ep.title }}
-                <v-icon v-if="isAssistido(ep)" color="green" class="ml-2">mdi-check-circle</v-icon>
+                <v-icon v-if="isAssistido(ep)" color="green" class="ml-2"
+                  >mdi-check-circle</v-icon
+                >
               </div>
               <div class="text-grey-lighten-1 mb-2">{{ ep.description }}</div>
 
@@ -96,17 +88,15 @@
               >
                 <v-icon>mdi-content-save-all</v-icon>
               </v-btn>
-                <v-btn
-                  
-                  icon
-                  variant="text"
-                  size="small"
-                  @click="desmarcarAssistido(ep)"
-                  title="Desmarcar como assistido"
-                >
-                  <v-icon color="red" size="28">mdi-close-circle</v-icon>
-                </v-btn>
-              
+              <v-btn
+                icon
+                variant="text"
+                size="small"
+                @click="desmarcarAssistido(ep)"
+                title="Desmarcar como assistido"
+              >
+                <v-icon color="red" size="28">mdi-close-circle</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -116,96 +106,99 @@
 </template>
 
 <script>
-  import { useRouter, useRoute } from "vue-router";
-  import { computed, ref, watch } from "vue";
-  import { useTodoStore } from "../stores/todoStore";
+import { useRouter, useRoute } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useTodoStore } from "../stores/todoStore";
 
-  // Importar listas de episódios por anime
-  import soloLevelingEpisodes from "../data/soloLeveling";
-  // import chainsawEpisodes from "../data/chainsaw"; (quando criar)
+// Importar listas de episódios por anime
+import soloLevelingEpisodes from "../data/soloLeveling";
+// import chainsawEpisodes from "../data/chainsaw"; (quando criar)
 
-  export default {
-    setup() {
-      const router = useRouter();
-      const route = useRoute();
-      const todoStore = useTodoStore();
+export default {
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
+    const todoStore = useTodoStore();
 
-      const rating = ref(4.5);
+    const rating = ref(4.5);
 
-      const anime = computed(() => {
-        return todoStore.todos.find((todo) => todo.id === Number(route.params.id));
-      });
+    const anime = computed(() => {
+      return todoStore.todos.find((todo) => todo.id === Number(route.params.id));
+    });
 
-      const episodiosList = ref([]);
+    const episodiosList = ref([]);
 
-      // Preencher a lista correta com base no nome do anime
-      watch(anime, (newAnime) => {
+    // Preencher a lista correta com base no nome do anime
+    watch(
+      anime,
+      (newAnime) => {
         if (!newAnime) return;
 
         if (newAnime.title === "Solo Leveling") {
           episodiosList.value = soloLevelingEpisodes;
         }
         // Adicione outros animes aqui futuramente
-      }, { immediate: true });
-      // Exemplo: else if (anime.value?.title === "Chainsaw Man") { episodiosList.value = chainsawEpisodes }
+      },
+      { immediate: true }
+    );
+    // Exemplo: else if (anime.value?.title === "Chainsaw Man") { episodiosList.value = chainsawEpisodes }
 
-      const expandirVideo = (event) => {
-        const videoElement = event.target;
+    const expandirVideo = (event) => {
+      const videoElement = event.target;
 
-        if (videoElement.requestFullscreen) {
-          videoElement.requestFullscreen();
-        } else if (videoElement.webkitRequestFullscreen) {
-          videoElement.webkitRequestFullscreen();
-        } else if (videoElement.msRequestFullscreen) {
-          videoElement.msRequestFullscreen();
-        }
+      if (videoElement.requestFullscreen) {
+        videoElement.requestFullscreen();
+      } else if (videoElement.webkitRequestFullscreen) {
+        videoElement.webkitRequestFullscreen();
+      } else if (videoElement.msRequestFullscreen) {
+        videoElement.msRequestFullscreen();
+      }
 
-        if (videoElement.paused) {
-          videoElement.play();
-        }
-      };
+      if (videoElement.paused) {
+        videoElement.play();
+      }
+    };
 
-      const marcarComoAssistido = (ep) => {
-        const animeId = anime.value?.id;
-        const epId = `${animeId}-${ep.episodios}`; // exemplo: "1-3"
+    const marcarComoAssistido = (ep) => {
+      const animeId = anime.value?.id;
+      const epId = `${animeId}-${ep.episodios}`; // exemplo: "1-3"
 
-        todoStore.marcarEpAssistido({
-          ...ep,
-          id: epId,
-          animeId,
-          name: anime.value?.title,
-        });
-      };
-      const desmarcarAssistido = (ep) => {
-          const animeId = anime.value?.id;
-          const epId = `${animeId}-${ep.episodios}`;
-          todoStore.desmarcarEpAssistido(epId);
-        };
+      todoStore.marcarEpAssistido({
+        ...ep,
+        id: epId,
+        animeId,
+        name: anime.value?.title,
+      });
+    };
+    const desmarcarAssistido = (ep) => {
+      const animeId = anime.value?.id;
+      const epId = `${animeId}-${ep.episodios}`;
+      todoStore.desmarcarEpAssistido(epId);
+    };
 
+    const isAssistido = (ep) => {
+      const animeId = anime.value?.id;
+      const epId = `${animeId}-${ep.episodios}`;
 
-      const isAssistido = (ep) => {
-        const animeId = anime.value?.id;
-        const epId = `${animeId}-${ep.episodios}`;
+      return todoStore.userLogado?.episodiosAssistidos?.some((e) => e.id === epId);
+    };
 
-        return todoStore.userLogado?.episodiosAssistidos?.some(e => e.id === epId);
-      };
+    const Home = () => {
+      router.push("/home");
+    };
 
-      const Home = () => {
-        router.push("/home");
-      };
-
-      return {
-        anime,
-        Home,
-        expandirVideo,
-        marcarComoAssistido,
-        rating,
-        episodiosList,
-        isAssistido,
-        desmarcarAssistido,
-      };
-    },
-  };
+    return {
+      anime,
+      Home,
+      expandirVideo,
+      marcarComoAssistido,
+      rating,
+      episodiosList,
+      isAssistido,
+      desmarcarAssistido,
+    };
+  },
+};
 </script>
 
 <style scoped>

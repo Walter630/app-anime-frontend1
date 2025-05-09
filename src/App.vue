@@ -4,28 +4,22 @@
       <div>
         <!-- Aqui vai o conteúdo das rotas -->
         <router-view />
-
-        <!-- Spinner global, se quiser -->
-        <TodoSpinner v-if="loading" />
       </div>
     </div>
   </v-app>
 </template>
 
 <script>
-import TodoSpinner from "./components/TodoSpinner.vue";
 import { onMounted, ref } from "vue";
 import { useTodoStore } from "@/stores/todoStore";
 
-
 export default {
   name: "App",
-  components: { TodoSpinner },
 
   setup() {
     const loading = ref(false);
     const todoStore = useTodoStore();
-    
+
     todoStore.loadUsuarioLogado();
 
     onMounted(async () => {
@@ -34,7 +28,7 @@ export default {
       await Promise.all([todoStore.getTodos(), todoStore.getUsuario()]);
       loading.value = false;
     });
-     // 🔥 carrega se tiver alguém logado
+    // 🔥 carrega se tiver alguém logado
 
     return {
       loading,
@@ -43,6 +37,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
