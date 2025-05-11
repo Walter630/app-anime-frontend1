@@ -1,6 +1,6 @@
 <template>
   <v-app-bar flat height="250" class="pa-0" style="overflow: hidden">
-    <v-img src="https://picsum.photos/1200/250" cover height="250">
+    <v-img :src="imagemAleatoria" cover height="250">
       <v-container
         class="fill-height d-flex flex-column justify-end"
         style="background: rgba(0, 0, 0, 0.4)"
@@ -38,10 +38,19 @@
   <v-container>
     <main style="margin-top: 240px">
       <v-row class="text-center">
-        <v-col>
-          <v-icon>mdi-playlist-play</v-icon>
-          <div>Total de animes</div>
-        </v-col>
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn color="primary" dark v-bind="props" icon style="margin-top: 10px"
+              ><v-icon>mdi-playlist-play</v-icon></v-btn
+            >
+          </template>
+          <v-card>
+            <v-col v-for="(episodios, nomeAnime) in episodiosAgrupados" :key="nomeAnime">
+              <div><h2>Total de animes</h2></div>
+              Anime: {{ nomeAnime }}
+            </v-col>
+          </v-card>
+        </v-menu>
         <v-col>
           <v-icon>mdi-clock</v-icon>
           <div>Horas assistidas</div>
@@ -52,21 +61,26 @@
         </v-col>
       </v-row>
       <br />
-      <v-cols
-        v-for="(ep, index) in todoStore.userLogado?.episodiosAssistidos || []"
-        :key="index"
-        class="mb-2"
-      >
-        <v-card class="episodios">
-          <h3>Animes Assistidos</h3>
+      <v-expansion-panels multiple>
+        <v-expansion-panel
+          v-for="(episodios, nomeAnime) in episodiosAgrupados"
+          :key="nomeAnime"
+        >
+          <v-expansion-panel-title
+            >{{ nomeAnime }} - {{ episodios.total }} episodios
+            assistidos</v-expansion-panel-title
+          >
+          <v-expansion-panel-text>
+            <v-divider></v-divider>
+            <div v-for="(ep, index) in episodios.episodios" :key="index" class="mb-3">
+              <v-divider></v-divider>
+              Episódio {{ ep.episodios }}: {{ ep.title }}
+            </div>
+            <v-divider></v-divider>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
-          <v-card-title>
-            {{ ep.name || "Anime desconhecido" }}
-          </v-card-title>
-          <v-card-subtitle>Capítulo {{ ep.episodios }}: {{ ep.title }}</v-card-subtitle>
-          <v-btn class="ma-2" color="info">Continar</v-btn>
-        </v-card>
-      </v-cols>
       <!-- <v-list>
         <v-list-item v-for="atv in atividadesRecentes" :key="atv.id">
           <v-list-item-icon><v-icon>mdi-history</v-icon></v-list-item-icon>
@@ -93,6 +107,8 @@ export default {
     const usuarios = todoStore.usuarios;
     const router = useRouter();
 
+    const carrosel = ["/anime1.jpg", "/anime2.jpg", "/anime3.jpg"];
+    const imagemAleatoria = carrosel[Math.floor(Math.random() * carrosel.length)];
     const useEdit = computed(() => {
       return todoStore.userLogado ? todoStore.userLogado : null;
     });
@@ -105,12 +121,32 @@ export default {
       router.push("home");
     };
 
+    const episodiosAgrupados = computed(() => {
+      const agrupado = {};
+
+      for (const ep of todoStore.userLogado?.episodiosAssistidos || []) {
+        if (!agrupado[ep.name]) {
+          agrupado[ep.name] = {
+            total: 0,
+            episodios: [],
+          };
+        }
+
+        agrupado[ep.name].total += 1;
+        agrupado[ep.name].episodios.push(ep);
+      }
+
+      return agrupado;
+    });
+
     return {
       usuarios,
       useEdit,
       todoStore,
       marcarComoAssistido,
       sair,
+      episodiosAgrupados,
+      imagemAleatoria,
     };
   },
 };
